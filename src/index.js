@@ -1,17 +1,45 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import CommentsProvider from './useComments'
+
+// const theme = extendTheme({colors, styles:{global:globalStyles}})
+
+const theme = extendTheme({
+  colors: {
+    moderate_blue: 'hsl(238, 40%, 52%)',
+  soft_red: 'hsl(358, 79%, 66%)',
+  light_grayish_blue: 'hsl(239, 57%, 85%)',
+  pale_red: 'hsl(357, 100%, 86%)',
+  dark_blue: 'hsl(212, 24%, 26%)',
+  grayish_blue: 'hsl(211, 10%, 45%)',
+  light_gray: 'hsl(223, 19%, 93%)',
+  very_light_gray: 'hsl(228, 33%, 97%)',
+  },
+  styles: {
+    global: {
+      // styles for the `body`
+      body: {
+        bg: 'light_gray',
+        color: 'black',
+      },
+      // styles for the `a`
+      a: {
+        color: 'teal.500',
+        _hover: {
+          textDecoration: 'underline',
+        },
+      },
+    },
+  },
+})
 
 ReactDOM.render(
-  <React.StrictMode>
+    <CommentsProvider>
+  <ChakraProvider theme={theme}>
     <App />
-  </React.StrictMode>,
+  </ChakraProvider>
+    </CommentsProvider>,
   document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
