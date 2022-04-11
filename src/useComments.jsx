@@ -64,9 +64,7 @@ function CommentsProvider({ children }) {
 
     // NewReply
     function reply(parentId, user, content, replyingTo){
-
-        console.log(`id -> ${parentId} \n content: ${content} \n user: ${JSON.stringify(user)}`);
-
+        
         let ParentIdx = findParentIndex(parentId);
 
         let newComment = 

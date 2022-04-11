@@ -12,8 +12,6 @@ if(daysInBetween > 60){ return `${Math.floor(daysInBetween/4/7)} months ago`}
 if(daysInBetween > 1 ){return `${daysInBetween} days ago`}
 }
 
-const print = (something) => console.log(something);
-
 const millisecondsToDays = (miliseconds) => {
     return Math.floor(miliseconds / 1000 / 60 / 60 / 24);
 }
@@ -58,6 +56,3 @@ export const bubbleSort = (array) => {
   return sortedArray;
 }
 
-// const example = [1,5,9,8,4,7,5,5,10,15,30];
-
-// print(this.bubbleSort(example));
