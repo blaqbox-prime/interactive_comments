@@ -20,7 +20,6 @@ function CommentsProvider({ children }) {
         localStorage.getItem('comments') !== null ?
         setComments(JSON.parse(localStorage.getItem('comments'))) :
         setComments(sortByScore(data['comments']));
-        // setComments(sortByScore(data['comments']));
     }
     
     //saveChanges
