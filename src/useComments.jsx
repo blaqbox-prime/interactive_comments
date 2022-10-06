@@ -1,6 +1,6 @@
 import React, {useState, useContext} from 'react'
 import data from './data.json';
-import {arrayToSet, setToArray, bubbleSort} from './Utils.js'
+import {selectionSort} from './Utils.js'
 
 const CommentsContext = new React.createContext();
 
@@ -30,25 +30,15 @@ function CommentsProvider({ children }) {
 
     // sort Comments
     function sortByScore(comments) {
-        let scores = comments.map((comment) => Number(comment.score));
-        
-        // 1. convert array to set so we only have unique score values
-        // 2. convert resulting set back to array because it's easier to manipulate
-        // 3. sort by score in ascending order 
-        let uniqueScoresOrdered = bubbleSort(setToArray(arrayToSet(scores)));
-        let orderedComments = [];
 
-        // reverse the scores order
-        // filter comments for each score and append to orderedComments
-        uniqueScoresOrdered.reverse().forEach((score) => {
-            orderedComments = [ ...orderedComments ,...comments.filter((comment) => comment.score === score)];
-        });
+        let orderedComments = selectionSort(comments);
 
         return orderedComments;
     }
 
     // newComment
     function addTopLevelComment(content, user){
+        let newList = comments;
         let newComment = 
         {
             id: Math.floor(Math.random() * 1000),
@@ -58,18 +48,20 @@ function CommentsProvider({ children }) {
             user: {...user},
             replies:[]
         } 
-        comments.push(newComment);
-        saveChanges(comments);
+        newList.push(newComment);
+        saveChanges(newList);
     }
 
     // NewReply
     function reply(parentId, user, content, replyingTo){
         
+        let newList = comments;
+
         let ParentIdx = findParentIndex(parentId);
 
         let newComment = 
         {
-            id: Math.floor(Math.random() * 1000),
+            id: Math.floor(Math.random() * 1001),
             createdAt: new Date(),
             content: content,
             score: 0,
@@ -77,20 +69,21 @@ function CommentsProvider({ children }) {
             replies:[],
             user: {...user}
         } 
-        comments[ParentIdx].replies.push(newComment);
-        saveChanges(comments);
+        newList[ParentIdx].replies.push(newComment);
+        saveChanges(newList);
     }
 
     function updateComment(id ,parentId, content){
+        let newList = comments;
         if(!parentId){
-            let idx = comments.findIndex(comment => comment.id === id);
-            comments[idx].content = content;
-            saveChanges(comments);
+            let idx = newList.findIndex(comment => comment.id === id);
+            newList[idx].content = content;
+            saveChanges(newList);
         } else {
             let ParentIdx = findParentIndex(parentId);
-            let idx = comments[ParentIdx].replies.findIndex(comment => comment.id === id);
-            comments[ParentIdx].replies[idx].content = content;
-            saveChanges(comments);
+            let idx = newList[ParentIdx].replies.findIndex(comment => comment.id === id);
+            newList[ParentIdx].replies[idx].content = content;
+            saveChanges(newList);
         }
     }
 
@@ -98,44 +91,49 @@ function CommentsProvider({ children }) {
     // Delete Comment
     function deleteComment(id, parentId){
 
+        let newList = comments;
+
         if(parentId == null){
-            let idx = comments.findIndex(comment => comment.id === id);
-            comments.splice(idx, 1);
-            saveChanges(comments);
+            let idx = newList.findIndex(comment => comment.id === id);
+            newList.splice(idx, 1);
+            saveChanges(newList);
         } else {
             let ParentIdx = findParentIndex(parentId);
-            let idx = comments[ParentIdx].replies.findIndex(comment => comment.id === id);
-            comments[ParentIdx].replies.splice(idx, 1);;
-            saveChanges(comments);
+            let idx = newList[ParentIdx].replies.findIndex(comment => comment.id === id);
+            newList[ParentIdx].replies.splice(idx, 1);;
+            saveChanges(newList);
         }
     }
 
     // IncrementUpvote
     function incrementUpvote(id, parentId){
+        let newList = comments;
         if(parentId == null){
-            let idx = comments.findIndex(comment => comment.id === id);
-            comments[idx].score++;
-            saveChanges(comments);
+            let idx = newList.findIndex(comment => comment.id === id);
+            newList[idx].score++;
+            saveChanges(newList);
         } else {
             let ParentIdx = findParentIndex(parentId);
-            let idx = comments[ParentIdx].replies.findIndex(comment => comment.id === id);
-            comments[ParentIdx].replies[idx].score++;
-            saveChanges(comments);
+            let idx = newList[ParentIdx].replies.findIndex(comment => comment.id === id);
+            newList[ParentIdx].replies[idx].score++;
+            saveChanges(newList);
         }
     }
     
     // DecrementUpvote
     function decrementUpvote(id,parentId){
 
+        let newList = comments;
+
         if(parentId == null){
-            let idx = comments.findIndex(comment => comment.id === id);
-            if(comments[idx].score > 0){comments[idx].score--;
-            saveChanges(comments);}
+            let idx = newList.findIndex(comment => comment.id === id);
+            if(newList[idx].score > 0){newList[idx].score--;
+            saveChanges(newList);}
         } else {
             let ParentIdx = findParentIndex(parentId);
-            let idx = comments[ParentIdx].replies.findIndex(comment => comment.id === id);
-            if(comments[ParentIdx].replies[idx].score > 0){comments[ParentIdx].replies[idx].score--;
-            saveChanges(comments);
+            let idx = newList[ParentIdx].replies.findIndex(comment => comment.id === id);
+            if(newList[ParentIdx].replies[idx].score > 0){newList[ParentIdx].replies[idx].score--;
+            saveChanges(newList);
         }
         }
 

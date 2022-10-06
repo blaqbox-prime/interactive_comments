@@ -9,7 +9,7 @@ import AlertDialog from './components/AlertDialog';
 
 function App() {
 
-  const {comments, loadComments, showDeleteDialog, setDeleteDialogVisibility} = useComments();
+  const {comments, loadComments, showDeleteDialog} = useComments();
 
   useEffect(() => {
     loadComments();

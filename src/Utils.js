@@ -17,42 +17,28 @@ const millisecondsToDays = (miliseconds) => {
 }
 
 
-
-
-export const arrayToSet = (array) => {
-    const setFromArray = new Set();
-    array.forEach(element => setFromArray.add(element));
-
-    return setFromArray;
-}
-
-export const setToArray = (set) => {
-    const arrayFromSet = [];
-    set.forEach(element => arrayFromSet.push(element));
-    return arrayFromSet;
-}
-
-export const bubbleSort = (array) => {
-  let isSorted = false;
+export function selectionSort(array) {
   let temp;
   let sortedArray = array;
+  let size = sortedArray.length;
 
-  while (isSorted === false) {
-    for (let i = 0; i < sortedArray.length-1; i++) {
-      // check adjacent values 
-      if(sortedArray[i] > sortedArray[i+1]){
-        // if not in order set sorted to false
-        isSorted = false;
-        // switch the positions
-        temp = sortedArray[i];
-        sortedArray[i] = sortedArray[i+1];
-        sortedArray[i+1] = temp;
-      } else {
-        isSorted = true;
+
+  for (let i = 0; i < size; i++) {
+    let min = sortedArray[i];
+    let min_index = i;
+
+    for (let j = i + 1; j < size; j++) {
+      if (sortedArray[j].score > min.score) {
+        min = sortedArray[j];
+        min_index = j;
       }
-    }    
+    }
+
+    temp = sortedArray[i];
+    sortedArray[i] = min;
+    sortedArray[min_index] = temp;
   }
+
 
   return sortedArray;
 }
-
