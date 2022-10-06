@@ -59,26 +59,29 @@ It works (Thank God) but I feel it could have been done a little better.
 Just couldn't figure it out.
 
 ```js
-export const bubbleSort = (array) => {
-  let isSorted = false;
+export function selectionSort(array) {
   let temp;
   let sortedArray = array;
+  let size = sortedArray.length;
 
-  while (isSorted === false) {
-    for (let i = 0; i < sortedArray.length-1; i++) {
-      // check adjacent values 
-      if(sortedArray[i] > sortedArray[i+1]){
-        // if not in order set sorted to false
-        isSorted = false;
-        // switch the positions
-        temp = sortedArray[i];
-        sortedArray[i] = sortedArray[i+1];
-        sortedArray[i+1] = temp;
-      } else {
-        isSorted = true;
+
+  for (let i = 0; i < size; i++) {
+    let min = sortedArray[i];
+    let min_index = i;
+
+//sort largest to smallest
+    for (let j = i + 1; j < size; j++) {
+      if (sortedArray[j].score > min.score) {
+        min = sortedArray[j];
+        min_index = j;
       }
-    }    
+    }
+
+    temp = sortedArray[i];
+    sortedArray[i] = min;
+    sortedArray[min_index] = temp;
   }
+
 
   return sortedArray;
 }
@@ -86,21 +89,10 @@ export const bubbleSort = (array) => {
 The Sort function inside the ContextProvider I used for handling the comments. (React useContext)
 
 ```js
-  // sort Comments
+   // sort Comments
     function sortByScore(comments) {
-        let scores = comments.map((comment) => Number(comment.score));
-        
-        // 1. convert array to set so we only have unique score values
-        // 2. convert resulting set back to array because it's easier to manipulate
-        // 3. sort by score in ascending order 
-        let uniqueScoresOrdered = bubbleSort(setToArray(arrayToSet(scores)));
-        let orderedComments = [];
 
-        // reverse the scores order
-        // filter comments for each score and append to orderedComments
-        uniqueScoresOrdered.reverse().forEach((score) => {
-            orderedComments = [ ...orderedComments ,...comments.filter((comment) => comment.score === score)];
-        });
+        let orderedComments = selectionSort(comments);
 
         return orderedComments;
     }
